@@ -17,6 +17,7 @@ module.exports = function () {
           );
       }
 
+      // Verify token 
       var decoded = jwt.verify(
         req.headers.authorization,
         process.env.JWT_SECRET

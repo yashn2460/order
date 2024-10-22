@@ -1,18 +1,22 @@
-const { StatusCodes, ReasonPhrases } = require("http-status-codes");
-const { commonsuccess, commonerror } = require("../constant/common_response");
+const { StatusCodes, ReasonPhrases } = require("http-status-codes"); // For status codes
+const { commonsuccess, commonerror } = require("../constant/common_response"); // For Common responses
+const { cartMessages } = require("../constant/messages"); // For dynamic message
+
+//Models
 const CartItems = require("../model/cartItems.model");
-const { cartMessages } = require("../constant/messages");
 const Cart = require("../model/cart.model");
 const Book = require("../model/books.model");
 
 exports.addToCart = async (req, res) => {
   try {
     const { bookId, quantity, cartId } = req.body;
+    //Adding to cart-Item
     const cart = await CartItems.create({
       cartId,
       quantity,
       bookId,
     });
+    //Increment cart quantity
     await Cart.increment("quantity", { by: quantity, where: { id: cartId } });
     return res
       .status(StatusCodes.OK)
@@ -32,11 +36,11 @@ exports.getCartItems = async (req, res) => {
       include: [
         {
           model: CartItems,
-          as: "cartItems",
+          as: "cartItems", // Join cartItems
           include: [
             {
               model: Book,
-              as: "book", // Ensure this matches the alias defined in your CartItems model association
+              as: "book", // Join book
             },
           ],
         },
@@ -56,10 +60,13 @@ exports.removeCartItem = async (req, res) => {
   try {
     const { itemId } = req.params;
     const cartItem = await CartItems.findOne({ where: { id: itemId } });
+
+    //Decrement cart quantity
     await Cart.decrement("quantity", {
       by: cartItem.quantity,
       where: { id: cartItem.cartId },
     });
+     //Remove cart item
     await cartItem.destroy();
     return res
       .status(StatusCodes.OK)

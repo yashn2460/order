@@ -13,7 +13,6 @@ const {
   orderDetails,
 } = require("../controller/order.controller");
 
-// router.get("/", tokencheck(), getCartItems);
 router.post("/", tokencheck(), validation(orderValidation), placeOrder);
 router.get("/", tokencheck(), orders);
 router.get("/:id", tokencheck(), orderDetails);

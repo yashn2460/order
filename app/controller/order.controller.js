@@ -1,9 +1,11 @@
-const { StatusCodes, ReasonPhrases } = require("http-status-codes");
-const { commonsuccess, commonerror } = require("../constant/common_response");
+const { StatusCodes, ReasonPhrases } = require("http-status-codes") ;// For status codes
+const { commonsuccess, commonerror } = require("../constant/common_response"); // For Common responses
+const { orderMessages } = require("../constant/messages"); // For dynamic message
+
+//Models
 const Order = require("../model/orders.model");
 const OrderItem = require("../model/orderItems.model");
 const CartItems = require("../model/cartItems.model");
-const { orderMessages } = require("../constant/messages");
 const Book = require("../model/books.model");
 
 exports.placeOrder = async (req, res) => {
@@ -18,13 +20,17 @@ exports.placeOrder = async (req, res) => {
         },
       ],
     });
+    //Finding Total amount of order
     const totalAmount = cartItem.reduce((total, item) => {
       return total + item.book.price;
     }, 0);
+
     const order = await Order.create({
       totalAmount: totalAmount,
       userId: req.user.id,
     });
+
+     //Finding Per item cost
     const itemArray = cartItem.map((item) => {
       return {
         orderId: order.id,
@@ -36,7 +42,7 @@ exports.placeOrder = async (req, res) => {
     await OrderItem.bulkCreate(itemArray);
     return res
       .status(StatusCodes.OK)
-      .json(commonerror(order, orderMessages.orderPlace));
+      .json(commonsuccess(order, orderMessages.orderPlace));
   } catch (error) {
     console.log(error);
     return res
@@ -58,7 +64,7 @@ exports.orders = async (req, res) => {
     });
     return res
       .status(StatusCodes.OK)
-      .json(commonerror(orders, orderMessages.orderList));
+      .json(commonsuccess(orders, orderMessages.orderList));
   } catch (error) {
     return res
       .status(StatusCodes.BAD_REQUEST)
@@ -77,6 +83,8 @@ exports.orderDetails = async (req, res) => {
         },
       ],
     });
+
+    // If order not exist
     if (!order) {
       return res
         .status(StatusCodes.NOT_FOUND)
@@ -84,9 +92,10 @@ exports.orderDetails = async (req, res) => {
           commonerror({}, orderMessages.orderNotExist, StatusCodes.NOT_FOUND)
         );
     }
+
     return res
       .status(StatusCodes.OK)
-      .json(commonerror(order, orderMessages.orderDetails));
+      .json(commonsuccess(order, orderMessages.orderDetails));
   } catch (error) {
     return res
       .status(StatusCodes.BAD_REQUEST)
