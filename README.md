@@ -19,10 +19,11 @@ This project requires importing a database from an SQL file and configuring envi
 
 1. Open the .env file located in the root of the project.
 2. Update the following fields to match your MySQL setup:
-   DB_NAME
-   DB_USER
-   DB_PASSWORD
-
+    ```bash
+        DB_NAME
+        DB_USER
+        DB_PASSWORD
+    ```
 ### 3. Import Postman Documentation
 1. Import the Postman collection to test API requests by using the following link:
     https://documenter.getpostman.com/view/21416781/2sAXxY4UCa
@@ -32,7 +33,11 @@ This project requires importing a database from an SQL file and configuring envi
 ### 4. Run the Code
 
 1. Install the necessary dependencies using your preferred package manager (if applicable):
-   npm install
+    ```bash
+    npm install
+    ```
 2. Run the project using the following command:
+    ```bash
    npm start
+    ```
 
