@@ -4,6 +4,8 @@ const router = express.Router();
 //Middleware
 const tokencheck = require("../middleware/tokencheck");
 const validation = require("../middleware/validation");
+const { cartValidation } = require("../constant/validations");
+
 //Controller
 const {
   addToCart,
@@ -12,12 +14,7 @@ const {
 } = require("../controller/cart.controller");
 
 router.get("/", tokencheck(), getCartItems);
-router.post(
-  "/",
-  tokencheck(),
-  validation(["bookId", "quantity", "cartId"]),
-  addToCart
-);
+router.post("/", tokencheck(), validation(cartValidation), addToCart);
 router.delete("/:itemId", tokencheck(), removeCartItem);
 
 module.exports = router;

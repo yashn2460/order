@@ -9,8 +9,10 @@ exports.getBooks = async (req, res) => {
       const book = await Book.findOne({ where: { id: req.params.id } });
       if (!book) {
         return res
-          .status(StatusCodes.BAD_REQUEST)
-          .json(commonerror({}, bookMessages.bookNotExist));
+          .status(StatusCodes.NOT_FOUND)
+          .json(
+            commonerror({}, bookMessages.bookNotExist, StatusCodes.NOT_FOUND)
+          );
       }
       return res
         .status(StatusCodes.OK)

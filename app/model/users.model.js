@@ -25,7 +25,7 @@ const User = sequelize.define("User", {
 
 // Associations
 User.hasMany(Order, { foreignKey: "userId" }); // User can have many orders
-User.hasMany(Cart, { foreignKey: "userId" }); // User can have many cart items
+User.hasOne(Cart, { foreignKey: "userId" }); // User can have many cart items
 
 Order.belongsTo(User, { foreignKey: "userId" }); // Order belongs to User
 Cart.belongsTo(User, { foreignKey: "userId" }); // Cart belongs to User

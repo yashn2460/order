@@ -21,7 +21,6 @@ exports.placeOrder = async (req, res) => {
     const totalAmount = cartItem.reduce((total, item) => {
       return total + item.book.price;
     }, 0);
-    console.log(totalAmount);
     const order = await Order.create({
       totalAmount: totalAmount,
       userId: req.user.id,
@@ -80,8 +79,10 @@ exports.orderDetails = async (req, res) => {
     });
     if (!order) {
       return res
-        .status(StatusCodes.BAD_REQUEST)
-        .json(commonerror({}, orderMessages.orderNotExist));
+        .status(StatusCodes.NOT_FOUND)
+        .json(
+          commonerror({}, orderMessages.orderNotExist, StatusCodes.NOT_FOUND)
+        );
     }
     return res
       .status(StatusCodes.OK)
